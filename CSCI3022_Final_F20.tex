@@ -1,0 +1,483 @@
+%\documentclass[addpoints, answers]{exam}
+\documentclass[addpoints]{exam}
+
+% show the solutions? 0=no, 1=yes
+% if yes, then remove "answers" from the documentclass definition above.
+\def\solutions{0}
+
+% define which version of the exam (1-?)
+\def\examversion{1}
+% then use \if\examversion1 (or 2 or 3...)  ... \fi  to show only one version for each problem
+
+\newif\ifanswer\answerfalse
+
+\runningfooter{}
+{}
+{{\bf  \makebox[1in]{\hrulefill}
+/ \pointsonpage{\thepage} points}}
+
+\usepackage[top=.5in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{multirow, multicol}
+\usepackage{subfig}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{bm}
+
+\usepackage{listings}
+
+\footer{}{\thepage}{}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns,decorations.pathreplacing,shapes,arrows,matrix,positioning, shapes.geometric}
+
+\tikzstyle{block} = [rectangle, draw, fill=blue!15, text width=6em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+
+\tikzset{main node/.style={circle,draw,thick,minimum size=.75cm,inner sep=0pt},
+}
+
+\tikzset{square node/.style={rectangle,draw,thick,minimum size=.75cm,inner sep=0pt},
+}
+
+\newcommand{\erad}[2]{ \hat{\mathcal{R}}_{#1}\left( #2 \right) }
+\newcommand{\rad}[2]{ \mathcal{R}_{#1}\left( #2 \right) }
+\newcommand{\pr}[1]{\mbox{Pr}\left[#1 \right]}
+\newcommand{\prd}[2]{\mbox{Pr}_{#2}\left[#1 \right]}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\be}{\mathbf{\beta}}
+\providecommand{\g}{\, | \,}
+\newcommand{\al}{\mathbf{\alpha}}
+
+
+\newcommand{\ind}[1]{\mathds{1}\left[ #1 \right] }
+\newcommand{\e}[2]{\mathbb{E}_{#1}\left[ #2 \right] }
+\newcommand{\eh}[2]{\hat{\mathbb{E}}_{#1}\left[ #2 \right] }
+\newcommand{\obj}[0]{\mathscr{L}}
+\newcommand{\bo}[1]{\mathcal{O} \left( #1 \right) }
+\newcommand{\ex}[1]{\mbox{exp}\left\{ #1\right\} }
+
+% matrix macro
+\newcommand{\mymat}[1]{
+\left[
+\begin{array}{rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+#1
+\end{array}
+\right]
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{black},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+} 
+
+
+\newcommand{\Cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
+\def\Cpp{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++}}}
+
+
+\begin{document}
+
+\begin{minipage}[ht!]{.25\textwidth}
+CSCI 3022 
+
+Final Exam
+
+Fall 2020
+\vfill
+\end{minipage}
+\begin{minipage}[ht]{.75\textwidth}
+	\large
+	Write \textbf{clearly} and \textbf{in the box}:
+	\centering
+	\begin{tabular}{|l c|} 	\hline 
+	\rule{0pt}{1cm}
+	\textbf{Name:} & \hspace{9cm} \\ \hline 
+	\rule{0pt}{1cm}
+	\textbf{Student ID:} & \hspace{9cm} \\ \hline 
+	\rule{0pt}{1cm} \textbf{Section number:} & \hspace{9cm} \\ \hline 
+	\end{tabular}
+	%\end{table}
+	% \end{adjustwidth}
+	%\end{figure}
+\end{minipage}%
+
+\vspace{1cm}
+
+{\bf Read the following:}
+\vspace{1pc}
+
+\begin{itemize}                        %%%(change info. as desired)
+	\item {\bf RIGHT NOW}! Write your name, student ID and section number on the top of your exam. If you're handwriting your exam, include this information at the top of the first page!
+	\item You may use the textbook, your notes, lecture materials, and Piazza as recourses.  Piazza posts should not be about exact exam questions, but you may ask for technical clarifications and ask for help on review/past exam questions that might help you.  You may not use external sources from the internet or collaborate with your peers.
+	\item You may use a calculator, Python, or other computational device.
+	\item If you print a copy of the exam, clearly mark answers to multiple choice questions in the provided answer box. If you type or hand-write your exam answers, write each problem on their own line, clearly indicating both the problem number and answer letter.
+	\item Mark only one answer for multiple choice questions.  If you think two answers are correct, mark the answer that {\bf best} answers the question.  No justification is required for multiple choice questions.  For handwriting multiple choice answers, clearly mark both the number of the problem and your answer for each and every problem. 
+	\item For free response questions you must clearly justify all conclusions to receive full credit.  A correct answer with no supporting work will receive no credit. 
+	\item The Exam is due to Gradescope by midnight on Sunday, December 6.
+	\item When submitting your exam to Gradescope, use their submission tool to mark on which pages you answered specific questions.  Submitting your exam properly is worth 1/100 points.  The other problems sum to 99.
+\end{itemize}
+\clearpage
+% \vspace{1cm}
+
+% \begin{center}
+% \gradetable[v][pages]
+% \end{center}
+
+{\renewcommand{\arraystretch}{1.5}
+
+\vspace{8mm}
+
+% \begin{center}
+% \gradetable[v][pages]
+% \end{center}
+
+
+\label{---Problems---}
+
+
+\vspace{3cm}
+
+% =========================================================================================================
+% MCQs
+% =========================================================================================================
+{\begin{center} {\bf Multiple choice problems:} Write your answers in the boxes if using a printed version of the exam. \end{center}}\vspace{2mm}
+
+
+\begin{questions}
+	
+%1-2 Review-ish things
+\question[3]  It is a well-known fact that 50\% of the general population are rascals $(P(R) = 0.5)$ and 50\% of the general population are not rascals $(P(R^C) = 0.5).$ Furthermore, scientists have determined that about 90\% of rascals wear a top hat at all times, while only 30\% of non-rascals wear top hats. Suppose that you meet a person who is wearing a top hat. Given the information that they are wearing a top hat, what is the probability that they are a rascal?
+
+\vspace{2mm}
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item 0.09
+		\item 0.45
+		\item 0.6
+		\item 0.75
+		\item 0.9
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+\question[3]   Suppose that the random variable $X$ has mean $2$ and standard deviation $4$. Let $Y$ be the random variable given by $Y = X^2 + 1$. What is the expected value of $Y$?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item 3
+		\item 5
+		\item 12
+		\item 21
+		\item 25
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+%
+
+\question[3]  Suppose you compute a sample mean for a population that is normally distributed with known variance $\sigma^2$. Which combination of significance level and sample size $n$ produces the \textit{narrowest} confidence interval for the mean?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $\alpha=0.12$ and $n=100$
+		\item $\alpha=0.12$ and $n=25$
+		\item $\alpha=0.04$ and $n=100$
+		\item $\alpha=0.04$ and $n=25$
+		\item $\alpha=0.01$ and $n=100$
+		\item $\alpha=0.01$ and $n=25$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+%
+
+%3-8 Normals and Tests
+
+\question[3] Let $X$ be normally distributed with mean of $1$ and variance of $9$.  Which of the following represents $P(-2<X<1)$, using \texttt{scipy.stats} syntax?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item 0
+		\item $\texttt{stats.norm.cdf(1)}-\texttt{stats.norm.cdf(-2)}$
+		\item $\texttt{stats.norm.ppf(1)}-\texttt{stats.norm.ppf(-2)}$
+		\item $.5-\texttt{stats.norm.cdf(-1)}$
+		\item $\texttt{stats.norm.cdf(-1)}-\texttt{stats.norm.cdf(0)}$
+		\item 1
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+\clearpage
+
+\question[3]  Which of the following statements is \textbf{True}?
+
+\vspace{2mm}
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item You cannot make a Type I error when the null hypothesis is true.
+		\item You cannot make a Type II error when the null hypothesis is true.
+		\item The test that minimizes Type I error rate $\alpha$ will also be the one that minimizes the Type II error rate $\beta$.
+		\item The p-value is the probability that the null hypothesis is true.
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+
+\question[3]  Consider performing a multiple linear regression on a data-set with full and reduced models of the form $y= \beta_0 + \beta_1 x_1+\beta_2 x_2+\beta_3 x_3+\beta_4 x_4$ and  $y= \beta_0 + \beta_1 x_1+\beta_4 x_4$, respectively.  Suppose that you perform a partial F test and fail to reject the null hypothesis. What is the strongest conclusion you can draw?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item Nothing.
+		\item $\beta_k\ne 0$ for \textit{some} $k \in \{1,2,3,4\}$.
+		\item $\beta_k=0$ for \textit{all} $k \in \{1,2,3,4\}$.
+		\item $\beta_k\ne 0$ for \textit{all} $k \in \{1,2,3,4\}$.
+		\item $\beta_1=\beta_4=0.$
+		\item $\beta_2=\beta_3=0.$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+\question[3]  Suppose you generate 8,000 confidence intervals for the mean of a population, using fixed significance level $\alpha$. You discover that 782 of them FAIL to cover the true mean. Which of the following is the most appropriate estimate of the significance level $\alpha$?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item 0.01
+		\item 0.025
+		\item 0.05
+		\item 0.1
+		\item 0.2
+		\item 0.782		
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+
+%8-10 Regression and ANOVA
+\question[3] In the context of a simple linear regression predicting $Y$ based on the single feature $X$, if the true slope coefficient satisfies $\beta_1=0$, then which of the following can you \textbf{always} conclude:
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item We will not reject the null hypothesis of $\beta_1=0$ using the $F$-test for our linear model.
+		\item The sum of squared regression (SSR) will exceed the sum of squared errors (SSE).
+		\item The sum of squared errors (SSE) will exceed the sum of squared error (SSR).
+		\item $X$ an $Y$ are independent.
+		\item There is not in reality a linear relationship between $X$ and $Y$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 D \fi}
+\end{minipage}
+\vspace{3mm}
+
+\clearpage
+\question[3] You're performing a simple linear regression, and someone spills ink all over your beautiful regression table.  As a result, you can only read the following, though you also do recall that the data set had 107 observations:\\
+\begin{tabular}{|c|c|c|c|c|} \hline
+	Coefficient & Estimate & Std. error & t-value & Pval\\ \hline
+	(Intercept)& \textbf{MISSING} & 1.12566& 4.436 & \textbf{MISSING} \\
+	Slope& 0.73111 &0.02455& \textbf{MISSING}& $<$ 2e-16 \\ \hline
+\end{tabular}
+
+What is the correct (exact) \textbf{MISSING} value for the \textit{intercept}'s p-value? \\
+
+\vspace{2mm}
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item \texttt{stats.t.ppf(4.436, df=107)}
+		\item 2(1-\texttt{stats.t.cdf(4.436, df=105)})
+		\item $1.12566 \cdot 4.436$
+		\item 2(1-\texttt{stats.t.cdf(4.436, df=107)})
+		\item (1-\texttt{stats.norm.cdf(4.436)})
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 B \fi}
+\end{minipage}
+
+%11-12 LogReg
+\question[3] From the same table as the prior question, what is the (exact) \textbf{MISSING} value for the t-value of the \textit{slope}?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $0.73111 / 0.02455$	
+		\item \texttt{stats.t.ppf(0.73111)}- \texttt{stats.t.ppf(0.02455)}
+		\item \texttt{stats.t.ppf(0.73111, df=105)}- \texttt{stats.t.ppf(0.02455, df=105)}
+		\item \texttt{stats.norm.ppf(2e-16)}
+		\item $0.73111 \cdot 0.02455$
+		\item $0.73111 \cdot 0.02455/(2e-16)$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 B \fi}
+\end{minipage}
+
+\question[3] Suppose that you are performing a binary classification to assign a class label $y \in \{0,1\}$ to each data point and you model the probability that the data point $x$ belong to class 1 by the logistic regression model
+$$p(y=1|x)=\text{sigm}(\hat{\beta_0}+\hat{\beta_1}x)$$
+where $\hat{\beta_0}=2$ and $\hat{\beta_1}=1$.  How would your model a data point with $x=-1.5$?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item inconclusive
+		\item $\hat{y}=0$
+		\item $\hat{y}=.5$
+		\item $\hat{y}=1$
+		\item The limit does not exist.
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+\question[3] For the same logistic regression model given in the previous problem, what happens if $x$ increases by one unit?
+
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item the odds that $y = 1$ increase by a factor of $e$
+		\item the odds that $y = 1$ increase by $1$ unit
+		\item the probability that $y = 1$ increases by $1$ unit
+		\item the probability that $y = 1$ increases by a factor of $e$
+		\item the probability that $y = 1$ decreases by a factor of $e$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+\clearpage
+
+
+% =========================================================================================================
+% Free Responses and Short Answers
+% =========================================================================================================
+{\begin{center} {\bf Free Response problems:} Write your answers in the spaces following each prompt if possible.\\  Make note if your work continues elsewhere!\end{center}}\vspace{2mm}
+
+%%FR 1: (Review)
+\question[18] Suppose the random variable $X$ represents how delicious a donut is. Under Anna's donut recipe, $X$ has the probability density function $f_A$ and using Jacob's donut recipe, $X$ has the probability density function $f_J$:
+
+$$f_A(x) = \frac{9}{10}x - \frac{3}{10}x^2,  \ \ \textnormal{for} \ \ x \in [0, 2] \ \  (0 \ \ \textnormal{otherwise}) $$
+$$f_J(x) = \frac{1}{3}x + \frac{1}{6},  \ \ \textnormal{for} \ \ x \in [0, 2] \ \  (0 \ \ \textnormal{otherwise}) $$
+
+Show all your work and simplify your answers as much as possible. $\fbox{Box}$ your final answers. You must perform these calculations by hand unless otherwise stated.
+
+\begin{enumerate}
+	\item[(a)] Which recipe has the higher expected value of donut deliciousness? Use integrals to compute both.
+	\item[(b)] Which recipe has the higher median donut deliciousness? Use integrals to set these calculations up, but you may use software of your choice to solve for the medians if needed. [Hint: The median is the 50th percentile.]
+	\item[(c)] A donut is classified as ``officially gross" if it has a deliciousness less than $1/2$. Which recipe has the lowest probability of producing a donut that is officially gross? Use integrals and compute by hand.
+	\item[(d)] Which recipe would you want to use and why? \textit{There is no single ``right" answer here, as long as you have justification consistent with your responses in a, b, and c.}
+\end{enumerate}
+\clearpage
+
+%%FR2: HT
+\question[15] [40 points] A current leading drug provides pain relief within an average of 10 minutes of taking the drug. Another company aims to produce a new drug that will provide pain-relief symptoms in less than ten minutes. It is fair to assume that the time from taking the drug to the time pain relief begins is normally distributed. You are planning the study, and need to give the company information on how their clinical trial will perform. The hypothesis being tested is:\\
+$H_0: \mu =10 ; \quad H_a: \mu<10.$
+where $\mu$ is the average length of time to pain relief provided by the new drug. Previous studies have shown the standard deviation of time to pain relief to be 12 minutes, so you decide to use that as a \textit{known} value of $\sigma$:
+
+	\begin{enumerate}[label=(\alph*)]
+		\item You want to fix the probability of a Type I error at 15\%.  What cut-off point or rejection region should you use for rejection of the null hypothesis?
+		\item If the new drug acts 1 minute faster than the old drug, what sample size do you need to have 80\% power for your test?
+		\item What will happen to the power of this test if we only increase our probability of a Type I error? 	(You do not need to give specific calculations here, just explain.)
+		\item What will happen to the power of this test if the new drug actually acts an average of 90 seconds faster than the old drug? (You do not need to give specific calculations here, just explain.)
+		\item How would the 85\% confidence interval for $\mu$ implied by your sample relate to your results in part (a)?
+	\end{enumerate}
+
+\clearpage
+
+%FR3: Linear Models interpretations
+\question[12] It's line-drawing time!  The next 4 questions refer to the following plot, with \textit{fitted} least-squares line by model $Y_i=\beta_0+ \beta_1X_i+\varepsilon_i$ shown:\\
+\includegraphics[width=.5\textwidth]{E2SLR1}\\
+The above plot was created by running \textsc{slr=sm.OLS(x,y).fit()} on a pair of numpy arrays holding the $x$ and $y$ coordinates of the data.  For each question, if the statement is always true mark ``True"; if it is \textit{possible} for the statement to be false, mark ``False." You need to \textbf{justify} your answer with (at least) a full sentence:
+
+
+\begin{enumerate}[label=(\alph*)]
+	\item For the given plot, $\beta_1>0$.
+	\item For the given plot, $\hat{\beta_1}>0$.
+	\item For the given plot, if we run \textsc{slr.predict(0)}, Python will return exactly $\hat{\beta_0}$
+	\item For the given plot,  the simple linear regression estimators satisfy $\hat{\beta}_0+\hat{\beta}_1 \bar{X}=\bar{Y}$
+\end{enumerate}
+\clearpage
+
+
+%%FR 4: ANOVA vs LM
+
+\question[18] A study is performed to investigate the effects of three different studying techniques - or ``treatments" - vs. a control on 500 people. The outcome of interest is an improvement score (out of 125 points), reported by the student. 
+
+In the table below, the mean and standard deviation of the improvement score for each treatment category is reported. 
+
+\begin{center}
+	\begin{tabular}{|c|c|c|} \hline
+Group & Mean & SD\\ \hline
+Control & 60.93 & 19.87\\
+Treatment 1: Despair (tx1) & 56.66 & 18.39\\
+Treatment 2: Frequent Gaming Breaks (tx2) & 64.51 & 19.53\\
+Treatment 3: 4am Cramming (tx3) & 70.61 & 17.55\\ \hline
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+	\item Based on this information, perform three separate hypothesis tests investigating:\\
+	$H_0:\mu_c-\mu_{tx}=0; \quad H_a: \mu_c-\mu_{tx}\ne 0$ for \textit{each} treatment group against the control group.  Use $\alpha=0.10.$
+	\item As a more sophisticated data scientist, you instead use a regression model.  Your results for the coefficients of the model are:\\
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|} \hline
+		Group & Estimate & Std. error & t-value & Pval\\ \hline
+(Intercept)& 60.756& 1.678& 36.209& $<$2e-16 \\
+tx1& -4.259 &2.363& -1.802& 0.0722 \\
+tx2 &4.115 &2.354& 1.748& 0.0811 \\
+tx3 &9.823 &2.363& 4.156& 3.81e-05 \\ \hline
+	\end{tabular}
+\end{center}
+	\item What do you notice about the differences between treatment effects in the regression model when compared to the hypothesis tests? Why are there differences here?
+	\item Using the regression model output, calculate 99\% confidence intervals for all 4 coefficients: $\beta_0, \beta_1, \beta_2,$ and $\beta_3$.
+	\item Suppose that the first ten subjects of the study are in the following groups: control, tx1, tx1, tx3, tx2, control, control, tx3, tx3, tx2. What does the $X$ (aka the ``design matrix") look like for the first ten subjects?
+\end{enumerate}
+
+
+\end{questions}
+
+\end{document}
+
+
+
